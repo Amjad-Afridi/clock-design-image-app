@@ -6,7 +6,6 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const handleRotate = (e) => {
-    setIsSidebarOpen(true)
     const rect = e.currentTarget.getBoundingClientRect()
     const buttonCenterX = rect.left + rect.width / 2
     const buttonCenterY = rect.top + rect.height / 2
@@ -16,67 +15,90 @@ function App() {
 
     // Calculate target angle in radians
     const angleRad = Math.atan2(buttonCenterY - hubCenterY, buttonCenterX - hubCenterX)
-    
-    // Convert to degrees and adjust for initial state (arrow points up)
     let targetAngle = (angleRad * 180) / Math.PI + 90
-    
-    // Normalize target angle to [0, 360)
     targetAngle = (targetAngle % 360 + 360) % 360
 
-    // Shortest path logic:
     const currentRot = rotation
     const currentRotNormalized = (currentRot % 360 + 360) % 360
     
     let diff = targetAngle - currentRotNormalized
     
-    if (diff > 180) {
-      diff -= 360
-    } else if (diff < -180) {
-      diff += 360
+    // ── Specialized Direction Logic ──
+    const isCurrentlyLeft = currentRotNormalized > 180 && currentRotNormalized < 360
+    const isCurrentlyRight = currentRotNormalized > 0 && currentRotNormalized < 180
+    const isTargetLeft = targetAngle > 180 && targetAngle < 360
+    const isTargetRight = targetAngle > 0 && targetAngle < 180
+
+    if (isCurrentlyLeft && isTargetRight) {
+      // Force Clockwise: diff should be positive
+      if (diff < 0) diff += 360
+    } else if (isCurrentlyRight && isTargetLeft) {
+      // Force Anti-Clockwise: diff should be negative
+      if (diff > 0) diff -= 360
+    } else {
+      // Fallback to shortest path
+      if (diff > 180) diff -= 360
+      else if (diff < -180) diff += 360
     }
     
     setRotation(currentRot + diff)
+
+    // Delay sidebar opening until rotation finishes (CSS transition is 0.8s)
+    setTimeout(() => {
+      setIsSidebarOpen(true)
+    }, 800)
   }
 
   return (
     <div className="home">
-
-      {/* ── Center Hub ── */}
-      <div className="hub-container">
-        <div className="hub">
-          <img src="/dial.png" alt="iMAGE266 The Foundation Inc." className="hub__img" />
-        </div>
-      </div>
-
-      {/* ── Rotating Arrow (outside hub container for z-index) ── */}
+      
+      {/* ── Dark Overlay ── */}
       <div 
-        className="arrow-container" 
-        style={{ transform: `translate(-50%, -50%) rotate(${rotation}deg)` }}
-      >
-        <img src="/timer-arrow.png" alt="Timer Arrow" className="arrow-img" />
+        className={`overlay ${isSidebarOpen ? 'overlay--visible' : ''}`} 
+        onClick={() => setIsSidebarOpen(false)}
+      />
+
+      {/* ── Responsive Stage (16:9) ── */}
+      <div className="stage">
+
+        {/* ── Center Hub ── */}
+        <div className="hub-container">
+          <div className="hub">
+            <img src="/dial.png" alt="iMAGE266 The Foundation Inc." className="hub__img" />
+          </div>
+        </div>
+
+        {/* ── Rotating Arrow ── */}
+        <div 
+          className="arrow-container" 
+          style={{ transform: `translate(-50%, -50%) rotate(${rotation}deg)` }}
+        >
+          <img src="/timer-arrow.png" alt="Timer Arrow" className="arrow-img" />
+        </div>
+
+        {/* ── Left column images ── */}
+        <button className="img-btn img-btn--l1" onClick={handleRotate} aria-label="iMAGE PRP">
+          <img src="/left-1.gif" alt="iMAGE PRP" />
+        </button>
+        <button className="img-btn img-btn--l2" onClick={handleRotate} aria-label="iMAGE PRP 2">
+          <img src="/left-2.gif" alt="iMAGE PRP 2" />
+        </button>
+        <button className="img-btn img-btn--l3" onClick={handleRotate} aria-label="iMAGE266 Tax">
+          <img src="/left-3.gif" alt="iMAGE266 Tax" />
+        </button>
+
+        {/* ── Right column images ── */}
+        <button className="img-btn img-btn--r1" onClick={handleRotate} aria-label="iMAGE266 Video">
+          <img src="/right-1.png" alt="iMAGE266 Video" />
+        </button>
+        <button className="img-btn img-btn--r2" onClick={handleRotate} aria-label="iMAGE266 Video 2">
+          <img src="/right-2.gif" alt="iMAGE266 Video 2" />
+        </button>
+        <button className="img-btn img-btn--r3" onClick={handleRotate} aria-label="iMAGE266 Insurance">
+          <img src="/right-3.gif" alt="iMAGE266 Insurance" />
+        </button>
+
       </div>
-
-      {/* ── Left column images ── */}
-      <button className="img-btn img-btn--l1" onClick={handleRotate} aria-label="iMAGE PRP">
-        <img src="/left-1.gif" alt="iMAGE PRP" />
-      </button>
-      <button className="img-btn img-btn--l2" onClick={handleRotate} aria-label="iMAGE PRP 2">
-        <img src="/left-2.gif" alt="iMAGE PRP 2" />
-      </button>
-      <button className="img-btn img-btn--l3" onClick={handleRotate} aria-label="iMAGE266 Tax">
-        <img src="/left-3.gif" alt="iMAGE266 Tax" />
-      </button>
-
-      {/* ── Right column images ── */}
-      <button className="img-btn img-btn--r1" onClick={handleRotate} aria-label="iMAGE266 Video">
-        <img src="/right-1.png" alt="iMAGE266 Video" />
-      </button>
-      <button className="img-btn img-btn--r2" onClick={handleRotate} aria-label="iMAGE266 Video 2">
-        <img src="/right-2.gif" alt="iMAGE266 Video 2" />
-      </button>
-      <button className="img-btn img-btn--r3" onClick={handleRotate} aria-label="iMAGE266 Insurance">
-        <img src="/right-3.gif" alt="iMAGE266 Insurance" />
-      </button>
 
       {/* ── Sidebar (Slide Window) ── */}
       <div className={`sidebar ${isSidebarOpen ? 'sidebar--open' : ''}`}>

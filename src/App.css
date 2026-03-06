@@ -35,15 +35,47 @@ html, body, #root {
   pointer-events: none;
 }
 
+/* Overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  z-index: 1500;
+  cursor: pointer;
+}
+
+.overlay--visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ─── Responsive Stage (16:9) ─── */
+.stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 56.25vw; /* 810/1440 * 100 */
+  max-width: 177.77vh; /* 1440/810 * 100 */
+  max-height: 100vh;
+  z-index: 5;
+  pointer-events: none; /* Allow events through to buttons */
+}
+
 /* ─── Hub Container — holds Hub and Arrow ─── */
 .hub-container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 37.28vw;
-  height: 68.90vh;
+  width: 45.28%;
+  height: 69.90%;
   z-index: 10;
+  pointer-events: auto;
 }
 
 /* Hub — centered, ellipse shape */
@@ -113,8 +145,8 @@ html, body, #root {
   top: 50%;
   left: 50%;
   /* Match the hub container dimensions explicitly */
-  width: 37.28vw;
-  height: 68.90vh;
+  width: 37.28%;
+  height: 68.90%;
   pointer-events: none;
   z-index: 1000; /* Higher than buttons (z-index: 20) */
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
@@ -148,6 +180,7 @@ html, body, #root {
   overflow: hidden;
   z-index: 5;
   transition: filter 0.2s ease, transform 0.2s ease;
+  pointer-events: auto; /* Ensure buttons are clickable inside stage */
 }
 
 .img-btn img {
@@ -167,6 +200,60 @@ html, body, #root {
 }
 
 /* Removed pseudo-element shadow that was causing bleeding */
+
+/* Removed empty ruleset */
+
+/* ─────────────────────────────────────────────────────────────────────
+   Position percentages relative to the 16:9 .stage
+───────────────────────────────────────────────────────────────────── */
+
+/* left-1 */
+.img-btn--l1 {
+  top:    7.5%;
+  left:   10%;
+  width:  28.89%;
+  height: 26.72%;
+}
+
+/* left-2 */
+.img-btn--l2 {
+  top:    37%;
+  left:    1%;
+  width:  33%;
+  height: 26.11%;
+}
+
+/* left-3 */
+.img-btn--l3 {
+  top:    65.95%;
+  left:   8.25%;
+  width:  29.90%;
+  height: 30.11%;
+}
+
+/* right-1 */
+.img-btn--r1 {
+  top:     7.5%;
+  left:   62.93%;
+  width:  28.00%;
+  height: 28.47%;
+}
+
+/* right-2 */
+.img-btn--r2 {
+  top:    37%;
+  left:   71%;
+  width:  23.13%;
+  height: 26.62%;
+}
+
+/* right-3 */
+.img-btn--r3 {
+  top:    65.95%;
+  left:   62%;
+  width:  29.90%;
+  height: 30.11%;
+}
 
 /* ─── Sidebar (Slide Window) ─── */
 .sidebar {
@@ -226,57 +313,4 @@ html, body, #root {
 .sidebar__back:hover {
   transform: scale(1.1);
   opacity: 0.9;
-}
-
-/* ─────────────────────────────────────────────────────────────────────
-   XD pixel values pre-converted to vw / vh
-   Formula:  vw = px / 1440 * 100   |   vh = px / 810 * 100
-───────────────────────────────────────────────────────────────────── */
-
-/* left-1  top:42 left:162 w:416 h:265 */
-.img-btn--l1 {
-  top:    5.19vh;    /* 42  / 810  */
-  left:   12.8vw;   /* 162 / 1440 */
-  width:  28.89vw;   /* 416 / 1440 */
-  height: 32.72vh;   /* 265 / 810  */
-}
-
-/* left-2  top:285 left:115 w:336 h:252 */
-.img-btn--l2 {
-  top:    38.19vh;   /* 285 / 810  */
-  left:    7.5vw;   /* 115 / 1440 */
-  width:  32.33vw;   /* 336 / 1440 */
-  height: 26.11vh;   /* 252 / 810  */
-}
-
-/* left-3  top:518 left:162 w:445 h:252 */
-.img-btn--l3 {
-  top:    65.95vh;   /* 518 / 810  */
-  left:   11.25vw;   /* 162 / 1440 */
-  width:  30.90vw;   /* 445 / 1440 */
-  height: 31.11vh;   /* 252 / 810  */
-}
-
-/* right-1 top:42 left:863 w:432 h:263 */
-.img-btn--r1 {
-  top:     5.19vh;   /* 42  / 810  */
-  left:   57.93vw;   /* 863 / 1440 */
-  width:  30.00vw;   /* 432 / 1440 */
-  height: 32.47vh;   /* 263 / 810  */
-}
-
-/* right-2 top:288 left:989 w:333 h:248 */
-.img-btn--r2 {
-  top:    37.56vh;   /* 288 / 810  */
-  left:   64.68vw;   /* 989 / 1440 */
-  width:  23.13vw;   /* 333 / 1440 */
-  height: 26.62vh;   /* 248 / 810  */
-}
-
-/* right-3 top:519 left:833 w:445 h:249 */
-.img-btn--r3 {
-  top:    64.07vh;   /* 519 / 810  */
-  left:   57.85vw;   /* 833 / 1440 */
-  width:  30.90vw;   /* 445 / 1440 */
-  height: 30.74vh;   /* 249 / 810  */
 }
