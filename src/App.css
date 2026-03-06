@@ -125,8 +125,8 @@ html, body, #root {
 .arrow-img {
   position: absolute;
   /* Place it on the border of the dial (top/center) */
-  top: -80px; 
-  width: 40px;
+  top: -70px; 
+  width: 30px;
   height: auto;
   filter: drop-shadow(0 0 10px rgba(212, 184, 112, 0.8));
   animation: arrow-float 3s ease-in-out infinite;
@@ -163,14 +163,69 @@ html, body, #root {
 
 .img-btn:hover img {
   filter: brightness(1.4) contrast(1.1) drop-shadow(0 0 15px rgba(212, 184, 112, 0.7));
-  /* Since parent .img-btn has overflow: hidden, this shadow is clipped at the container edges,
-     creating a focused "inner glow" feel on the stone. */
+  /* Reverted to the previous gold glow as requested */
 }
 
 /* Removed pseudo-element shadow that was causing bleeding */
 
-.img-btn:active {
-  /* transform: scale(0.97); */
+/* ─── Sidebar (Slide Window) ─── */
+.sidebar {
+  position: absolute;
+  top: 0;
+  right: -40%; /* Hidden by default */
+  width: 40%;
+  height: 100%;
+  z-index: 2000;
+  transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  box-shadow: -10px 0 50px rgba(0, 0, 0, 0.8);
+}
+
+.sidebar--open {
+  right: 0;
+}
+
+.sidebar__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar__img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill; /* Use fill to cover full area as requested */
+}
+
+.sidebar__back {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 2010;
+  background: none;
+  border: none;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.sidebar__back img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 5px rgba(0,0,0,0.8));
+}
+
+.sidebar__back:hover {
+  transform: scale(1.1);
+  opacity: 0.9;
 }
 
 /* ─────────────────────────────────────────────────────────────────────

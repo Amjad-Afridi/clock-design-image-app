@@ -3,8 +3,10 @@ import './App.css'
 
 function App() {
   const [rotation, setRotation] = useState(0)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const handleRotate = (e) => {
+    setIsSidebarOpen(true)
     const rect = e.currentTarget.getBoundingClientRect()
     const buttonCenterX = rect.left + rect.width / 2
     const buttonCenterY = rect.top + rect.height / 2
@@ -75,6 +77,21 @@ function App() {
       <button className="img-btn img-btn--r3" onClick={handleRotate} aria-label="iMAGE266 Insurance">
         <img src="/right-3.gif" alt="iMAGE266 Insurance" />
       </button>
+
+      {/* ── Sidebar (Slide Window) ── */}
+      <div className={`sidebar ${isSidebarOpen ? 'sidebar--open' : ''}`}>
+        <div className="sidebar__inner">
+          <button 
+            className="sidebar__back" 
+            onClick={() => setIsSidebarOpen(false)}
+            aria-label="Back"
+          >
+            <img src="/back-arrow.png" alt="Back" />
+          </button>
+          
+          <img src="/slide-window-obj-1.png" alt="Card Details" className="sidebar__img" />
+        </div>
+      </div>
 
     </div>
   )
